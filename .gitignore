@@ -6,6 +6,7 @@
 !.gitignore_global
 !.ctags
 !git
+!.gitmodules
 !.zshrc
 !.zsh/
 !.zsh/**

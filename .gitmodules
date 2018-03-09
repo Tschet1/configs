@@ -1,0 +1,18 @@
+[submodule "syntastic"]
+        path = .vim/bundle/syntastic
+	url = https://github.com/vim-syntastic/syntastic.git
+[submodule "NesC-Syntax-Highlighting"]
+        path = .vim/bundle/NesC-Syntax-Highlighting
+	url = https://github.com/vim-scripts/NesC-Syntax-Highlighting
+[submodule "tagbar"]
+        path = .vim/bundle/tagbar
+	url = git://github.com/majutsushi/tagbar
+[submodule "CurtineIncSw.vim"]
+        path = .vim/bundle/CurtineIncSw.vim
+	url = https://github.com/ericcurtin/CurtineIncSw.vim.git
+[submodule "nerdtree"]
+        path = .vim/bundle/nerdtree
+	url = https://github.com/scrooloose/nerdtree.git
+[submodule "zsh-autosuggestions"]
+        path = .zsh/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions.git
