@@ -1,0 +1,17 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!.gitignore_global
+!.ctags
+!git
+!.zshrc
+!.zsh/
+!.zsh/**
+!.vimrc
+!.vim/
+!.vim/**
+!script.pl
+!template.latex
+

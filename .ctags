@@ -1,0 +1,17 @@
+--langdef=nc
+--langmap=nc:.nc
+--regex-nc=/^[ \t]*configuration[ \t]*([a-zA-Z0-9_]+)/\1/b,configuration/
+--regex-nc=/^[ \t]*generic configuration[ \t]*([a-zA-Z0-9_]+)/\1/b,configuration/
+--regex-nc=/^[ \t]*command[ \t]*([a-zA-Z0-9_]+)[ \t]+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)[ \t]*\(/\1 \2\.\3/c,command/
+--regex-nc=/.*\.([a-zA-Z0-9]+)[ \t]*->.*/\1/d,definition/
+--regex-nc=/^[ \t]*event[ \t]*([a-zA-Z0-9_]+)[ \t]+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)[ \t]*\(/\1 \2\.\3/e,event/
+--regex-nc=/^[ \t]*void[ \t]+([a-zA-Z0-9_]+)[ \t]*\(/void \1/f,function/
+--regex-nc=/^[ \t]*([a-zA-Z0-9_]+_t[ \t]*\*)[ \t]*([a-zA-Z0-9_]+)[ \t]*\(/\1 \2/f,function/
+--regex-nc=/^[ \t]*static[ \t]+([a-zA-Z0-9_]+_t)[ \t]*\**[ \t]*([a-zA-Z0-9_]+)[ \t]*\(/\1 \2/f,function/
+--regex-nc=/^[ \t]*inline[ \t]+([a-zA-Z0-9_]+_t)[ \t]*\**[ \t]*([a-zA-Z0-9_]+)[ \t]*\(/\1 \2/f,function/
+--regex-nc=/^[ \t]*interface[ \t]*([a-zA-Z0-9_]+)/\1/i,interface/
+--regex-nc=/^[ \t]*generic module[ \t]*([a-zA-Z0-9_]+)/\1/m,module/
+--regex-nc=/^[ \t]*module[ \t]*([a-zA-Z0-9_]+)/\1/m,module/
+--regex-nc=/^[ \t]*task[ \t]*([a-zA-Z0-9_]+)[ \t]+([a-zA-Z0-9_]+)[ \t]*\(/\1 \2/t,task/
+--regex-nc=/^[ \t]*result_t[ \t]+([a-zA-Z0-9_]+)[ \t]*\(/result_t \1/r,result/
+--regex-nc=/^[ \t]*uses[ \t]+interface[ \t]+[a-zA-Z0-9_]+[a-zA-Z0-9 \t]+as[ \t]+([a-zA-Z0-9_]+)/\1/u,uses/
