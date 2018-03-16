@@ -17,4 +17,4 @@
 !.oh-my-zsh/**
 !script.pl
 !template.latex
-
+!mac-setup-script.sh
