@@ -13,6 +13,8 @@
 !.vimrc
 !.vim/
 !.vim/**
+!.oh-my-zsh
+!.oh-my-zsh/**
 !script.pl
 !template.latex
 
