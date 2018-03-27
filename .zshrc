@@ -52,7 +52,7 @@ ZSH_THEME="afowler"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git)
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+plugins=(zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -87,12 +87,12 @@ source $ZSH/oh-my-zsh.sh
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=4'
 ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
-ZSH_AUTOSUGGEST_USE_ASYNC=1
+#ZSH_AUTOSUGGEST_USE_ASYNC=1
 
 alias homepage="cd ~/Documents/Corps-Page; vagrant up"
 alias loadKey="ssh-add ~/.ssh/id_rsa"
 
-PATH="$PATH:/opt/bin:/opt/local/bin:/usr/local/bin"
+PATH="$PATH:/opt/bin:/opt/local/bin:/usr/local/bin:~/personalScripts"
 
 export PATH="/usr/local/opt/gnu-getopt/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
