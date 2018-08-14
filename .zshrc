@@ -53,7 +53,7 @@ ZSH_THEME="afowler"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git)
 plugins=(zsh-autosuggestions)
-
+source .iterm2_shell_integration.zsh
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -88,6 +88,10 @@ source $ZSH/oh-my-zsh.sh
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=4'
 ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
 #ZSH_AUTOSUGGEST_USE_ASYNC=1
+
+# have a per tab history
+unsetopt inc_append_history
+unsetopt share_history
 
 alias homepage="cd ~/Documents/Corps-Page; vagrant up"
 alias loadKey="ssh-add ~/.ssh/id_rsa"

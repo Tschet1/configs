@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+
+import sys
+import re
+
+if len(sys.argv) != 2:
+    print("usage: ", sys.argv[0], " filename ")
+    sys.exit()
+
+import matplotlib.pyplot as plt
+
+fil = sys.argv[1]
+
+pattern_ping = re.compile("^[0-9:]+ bytes from .* time=([0-9\.]+) ms")
+
+data = []
+with open(fil,"r") as file:
+    for line in file:
+        match = pattern_ping.match(line)
+        if match:
+            data.append(float(match.group(1)))
+
+plt.plot(data)
+plt.ylabel('RTT [ms]')
+plt.xlabel('ping number')
+plt.show()

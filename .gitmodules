@@ -1,18 +1,6 @@
-[submodule "syntastic"]
-        path = .vim/bundle/syntastic
-	url = https://github.com/vim-syntastic/syntastic.git
-[submodule "NesC-Syntax-Highlighting"]
-        path = .vim/bundle/NesC-Syntax-Highlighting
-	url = https://github.com/vim-scripts/NesC-Syntax-Highlighting
-[submodule "tagbar"]
-        path = .vim/bundle/tagbar
-	url = git://github.com/majutsushi/tagbar
-[submodule "CurtineIncSw.vim"]
-        path = .vim/bundle/CurtineIncSw.vim
-	url = https://github.com/ericcurtin/CurtineIncSw.vim.git
-[submodule "nerdtree"]
-        path = .vim/bundle/nerdtree
-	url = https://github.com/scrooloose/nerdtree.git
 [submodule ".oh-my-zsh"]
 	path = .oh-my-zsh
 	url = https://github.com/robbyrussell/oh-my-zsh.git
+[submodule ".vim/bundle/Vundle.vim"]
+	path = .vim/bundle/Vundle.vim
+	url = https://github.com/gmarik/Vundle.vim.git

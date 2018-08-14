@@ -2,7 +2,7 @@
 .DS_Store
 *.mp3
 *.mp4
-
+**/.DS_Store
 
 # Custom
 **/tags
@@ -34,3 +34,6 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# texpad
+**/.texpadtmp
