@@ -22,7 +22,7 @@ call vundle#end()            " required
 filetype plugin indent on    " required
  
 :syntax enable
- 
+
 " use same whitespaces as the last line
 set copyindent
  
@@ -79,6 +79,9 @@ let g:tagbar_type_nc = {
     \ ]
 \ }
 
+" enable backspace...
+set backspace=2
+
 " custom mappings
 map <C-n> :NERDTreeToggle<CR>
 map <C-l> :TagbarToggle<CR>
@@ -86,8 +89,10 @@ nnoremap <C-g> <C-]>
 map <C-h> :call CurtineIncSw()<CR>
 
 " youcompleteme
-let g:ycm_server_python_interpreter="/usr/bin/python"
-let g:ycm_python_binary_path = '/usr/local/bin/python'
+let g:ycm_server_python_interpreter="/usr/local/bin/python3"
+let g:ycm_python_binary_path = '/usr/local/bin/python3'
+let g:ycm_rust_src_path = '/Users/Jan/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
+map <C-f> ::YcmCompleter GoTo<CR>
 
 " java
 autocmd FileType java setlocal omnifunc=javacomplete#Complete
