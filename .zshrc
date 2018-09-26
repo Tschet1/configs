@@ -97,6 +97,7 @@ alias homepage="cd ~/Documents/Corps-Page; vagrant up"
 alias loadKey="ssh-add ~/.ssh/id_rsa"
 
 PATH="$PATH:/opt/bin:/opt/local/bin:/usr/local/bin:~/personalScripts"
+fpath+=~/.zfunc
 
 export PATH="/usr/local/opt/gnu-getopt/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
