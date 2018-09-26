@@ -25,7 +25,7 @@ function help_impl {
 # check if brew is installed on mac
 function bootstrap_impl {
     case "${machine}" in
-        Linux)  apt-get install git;;
+        Linux)  sudo apt-get install git;;
         Mac)    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" && brew install git;;
         *)      not_implemented
     esac
@@ -37,7 +37,7 @@ function bootstrap_impl {
 
 function vim_impl {
     case "${machine}" in
-        Linux)  apt-get install vim python3;;
+        Linux)  sudo apt-get install vim python3;;
         Mac)    brew install vim python3;;
         *)      not_implemented
     esac
@@ -47,12 +47,13 @@ function vim_impl {
 
 function zsh_impl {
     case "${machine}" in
-        Linux)  apt-get install git zsh;;
+        Linux)  sudo apt-get install git zsh;;
         Mac)    brew install git zsh;;
         *)      not_implemented
     esac
-    chsh -s /bin/zsh
+    chsh -s /bin/zsh || exit
     git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    compaudit | xargs chmod g-w,o-w
 }
 
 function ycm_impl {
