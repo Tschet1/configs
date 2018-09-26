@@ -31,7 +31,7 @@ function bootstrap_impl {
     esac
 
     git clone --recurse-submodule https://github.com/Tschet1/configs.git
-    mv configs/.* ~/
+    mv configs/.[a-zA-Z]* ~/
     rm -r configs
 }
 
@@ -93,7 +93,7 @@ case "$1" in
     zsh|-z|--zsh)       zsh_impl;;
     ycm|-y|--ycm)       ycm_impl;;
     vim|-v|--vim)       vim_impl;;
-    boostrap|-b|--bootstrap)    bootstrap_impl;;
+    bootstrap|-b|--bootstrap)    bootstrap_impl;;
     all|-a|--all)       bootstrap_impl && zsh_impl && vim_impl && ycm_impl;;
     *)                  help_impl
 esac
