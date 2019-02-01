@@ -53,7 +53,7 @@ ZSH_THEME="afowler"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git)
 plugins=(zsh-autosuggestions)
-source .iterm2_shell_integration.zsh
+source ~/.iterm2_shell_integration.zsh
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -101,3 +101,7 @@ fpath+=~/.zfunc
 
 export PATH="/usr/local/opt/gnu-getopt/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
+
+# we want english and not crappy translated CLI
+export LANG=en_US.UTF-8
+

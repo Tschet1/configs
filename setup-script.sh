@@ -47,8 +47,8 @@ function vim_impl {
 
 function zsh_impl {
     case "${machine}" in
-        Linux)  sudo apt-get install git zsh;;
-        Mac)    brew install git zsh;;
+        Linux)  sudo apt-get install git zsh tmux;;
+        Mac)    brew install git zsh tmux;;
         *)      not_implemented
     esac
     chsh -s /bin/zsh || exit
