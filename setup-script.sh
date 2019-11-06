@@ -53,17 +53,28 @@ function zsh_impl {
     esac
     chsh -s /bin/zsh || exit
     git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-    compaudit | xargs chmod g-w,o-w
+    if [[ "${machine}" == "Mac" ]]; then
+        compaudit | xargs chmod g-w,o-w
+    fi
+
+    if [[ "${machine}" == "Linux" ]]; then
+        apt install xclip
+        alias pbcopy='xclip -sel clip'
+    fi
 }
 
 function ycm_impl {
     case "${machine}" in
-        Linux)  not_implemented;;
+        Linux)  sudo apt install curl python3-dev git zsh vim ctags cmake npm yarn python3;;
         Mac)    brew install git zsh vim ctags cmake npm yarn python3;;
         *)      not_implemented
     esac
 
     # install rust
+    if ! which rustup > /dev/null; then
+        curl https://sh.rustup.rs -sSf | sh
+        export PATH="$PATH:~/.cargo/bin"
+    fi
     mkdir  ~/.zfunc
     rustup completions zsh > ~/.zfunc/_rustup
 
@@ -71,12 +82,21 @@ function ycm_impl {
     cd ~
     mkdir ycm_build
     cd ycm_build
-    cmake -DPYTHON_LIBRARY=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/lib/libpython.dylib -DPYTHON_INCLUDE_DIR=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/include/python3.7m -G "Unix Makefiles" -DUSE_SYSTEM_LIBCLANG=ON -DUSE_PYTHON2=off . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
+    if [[ "${machine}" == "Mac" ]]; then
+        cmake -DPYTHON_LIBRARY=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/lib/libpython3.7.dylib -DPYTHON_INCLUDE_DIR=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/include/python3.7m -G "Unix Makefiles" -DUSE_SYSTEM_LIBCLANG=ON -DUSE_PYTHON2=off . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
+    else
+        cmake -G "Unix Makef  iles" -DUSE_PYTHON2=off . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
+    fi
     cmake --build . --target ycm_core --config Release
+
     cd ~
     mkdir regex_build
     cd regex_build
-    cmake -DPYTHON_LIBRARY=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/lib/libpython.dylib -DPYTHON_INCLUDE_DIR=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/include/python3.7m -G "Unix Makefiles" . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/cregex
+    if [[ "${machine}" == "Mac" ]]; then
+        cmake -DPYTHON_LIBRARY=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/lib/libpython3.7.dylib -DPYTHON_INCLUDE_DIR=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/include/python3.7m -G "Unix Makefiles" . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/cregex
+    else
+        cmake -G "Unix Makefiles" . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/cregex
+    fi
     cmake --build . --target _regex --config Release
 
     # add js support

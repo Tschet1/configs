@@ -105,3 +105,8 @@ export PATH="/usr/local/sbin:$PATH"
 # we want english and not crappy translated CLI
 export LANG=en_US.UTF-8
 
+# set vim as standard texteditor
+export VISUAL=vim
+export EDITOR="$VISUAL"
+
+
