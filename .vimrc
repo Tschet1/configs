@@ -9,9 +9,9 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
-
 Plugin 'scrooloose/nerdtree'
-Plugin 'vim-syntastic/syntastic'
+" Plugin 'vim-syntastic/syntastic'
+Plugin 'neomake/neomake'
 Plugin 'majutsushi/tagbar'
 " Plugin 'artur-shaik/vim-javacomplete2'
 Plugin 'Valloric/YouCompleteMe'
@@ -20,6 +20,7 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'suan/vim-instant-markdown'
 Plugin 'tpope/vim-sleuth'
 Plugin 'airblade/vim-gitgutter'
+Plugin 'lumiliet/vim-twig'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -35,6 +36,24 @@ set pastetoggle=
  
 "use tabs in makefiles
 autocmd FileType make setlocal noexpandtab
+
+" syntax check on read and write
+function! MyOnBattery()
+  if has('macunix')
+    return match(system('pmset -g batt'), "Now drawing from 'Battery Power'") != -1
+  elsif has('unix')
+    return readfile('/sys/class/power_supply/AC/online') == ['0']
+  endif
+  return 0
+endfunction
+
+if MyOnBattery()
+  call neomake#configure#automake('rw')
+else
+  call neomake#configure#automake('nw', 1000)
+  set updatetime=1000
+endif
+
 
 "markdown (vim-instant-markdown)
 let g:instant_markdown_slow = 1
@@ -61,6 +80,7 @@ set hlsearch
 " git gutter: stage or undo changes
 map ö>s <Plug>GitGutterStageHunk
 map öu <Plug>GitGutterUndoHunk
+
 
 " Highlight unwanted whitespace
 highlight ExtraWhitespace ctermbg=red guibg=red
@@ -123,6 +143,8 @@ let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 
+" twig
+autocmd BufNewFile,BufRead *.twig set filetype=html.twig
 
 " youcompleteme
 let g:ycm_server_python_interpreter="/usr/local/bin/python3"
@@ -132,6 +154,7 @@ let g:EclimCompletionMethod = 'omnifunc'
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_autoclose_preview_window_after_insertion = 1
 map <C-f> ::YcmCompleter GoTo<CR>
+map <C-s> ::YcmCompleter GetDoc<CR>
 set splitbelow "open preview on bottom of screen"
 let g:ycm_seed_identifiers_with_syntax = 1 "add language specific completions"
 let g:ycm_filetype_blacklist = {
