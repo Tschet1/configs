@@ -185,3 +185,4 @@ git_info() {
 PROMPT='$(ssh_info) %{${fg_bold[blue]}%}:: %{$reset_color%}%{${fg[green]}%}%3~ $(git_prompt_info)%{${fg_bold[$CARETCOLOR]}%}»%{${reset_color}%} '
 
 export PATH=$PATH:$HOME/.config/composer/vendor/bin
+export PATH="/usr/local/opt/qt/bin:$PATH"

@@ -21,6 +21,7 @@ Plugin 'suan/vim-instant-markdown'
 Plugin 'tpope/vim-sleuth'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'lumiliet/vim-twig'
+Plugin 'jremmen/vim-ripgrep'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -168,8 +169,8 @@ let g:ycm_filetype_blacklist = {
       \ 'pandoc': 1,
       \ 'infolog': 1,
       \ 'mail': 1,
-      \ 'python': 1
       \}
+" \ 'python': 1
 
 " java
 "autocmd FileType java setlocal omnifunc=javacomplete#Complete

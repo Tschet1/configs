@@ -89,7 +89,7 @@ function ycm_impl {
     if [[ "${machine}" == "Mac" ]]; then
         cmake -DPYTHON_LIBRARY=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/lib/libpython3.7.dylib -DPYTHON_INCLUDE_DIR=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/include/python3.7m -G "Unix Makefiles" -DUSE_SYSTEM_LIBCLANG=ON -DUSE_PYTHON2=off . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
     else
-        cmake -G "Unix Makef  iles" -DUSE_PYTHON2=off . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
+        cmake -G "Unix Makefiles" -DUSE_PYTHON2=off . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
     fi
     cmake --build . --target ycm_core --config Release
 
