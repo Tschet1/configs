@@ -39,7 +39,7 @@ function bootstrap_impl {
 
 function vim_impl {
     case "${machine}" in
-        Linux)  sudo apt-get install nvim python3;;
+        Linux)  sudo apt-get install neovim python3;;
         Mac)    brew install nvim python3;;
         *)      not_implemented
     esac
