@@ -16,16 +16,26 @@ Plugin 'majutsushi/tagbar'
 " Plugin 'artur-shaik/vim-javacomplete2'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'rightson/vim-p4-syntax'
-Plugin 'ctrlpvim/ctrlp.vim'
+" Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'suan/vim-instant-markdown'
 Plugin 'tpope/vim-sleuth'
 Plugin 'airblade/vim-gitgutter'
+Plugin 'neomake/neomake'
+Plugin 'cpiger/NeoDebug'
+Plugin 'Vimjas/vim-python-pep8-indent'
+Plugin 'tpope/vim-fugitive'
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/FZF.vim'
+Plugin 'vim-scripts/DoxygenToolkit.vim'
+Plugin 'editorconfig/editorconfig-vim'
+Plugin 'gu-fan/riv.vim'
+Plugin 'Rykka/InstantRst'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
  
-:syntax enable
+syntax enable
 
 " use same whitespaces as the last line
 set copyindent
@@ -38,6 +48,26 @@ autocmd FileType make setlocal noexpandtab
 
 "markdown (vim-instant-markdown)
 let g:instant_markdown_slow = 1
+
+" pep8 intend for python
+python_pep8_indent_hang_closing = 0
+
+" syntax check on read and write
+function! MyOnBattery()
+  if has('macunix')
+    return match(system('pmset -g batt'), "Now drawing from 'Battery Power'") != -1
+  elsif has('unix')
+    return readfile('/sys/class/power_supply/AC/online') == ['0']
+  endif
+  return 0
+endfunction
+
+if MyOnBattery()
+  call neomake#configure#automake('rw')
+else
+  call neomake#configure#automake('nw', 1000)
+  set updatetime=1000
+endif
 
 " Show whitespace
 "set list
@@ -55,12 +85,14 @@ set hlsearch
 :hi StatusLine ctermfg=blue ctermbg=red
 :set ruler
 
+hi Search cterm=NONE ctermfg=black ctermbg=green
+
 " preview regex matches
 :set incsearch
 
 " git gutter: stage or undo changes
-map ö>s <Plug>GitGutterStageHunk
-map öu <Plug>GitGutterUndoHunk
+map ps <Plug>GitGutterStageHunk
+map pu <Plug>GitGutterUndoHunk
 
 " Highlight unwanted whitespace
 highlight ExtraWhitespace ctermbg=red guibg=red
@@ -69,10 +101,15 @@ autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
-
 " Highlight non ascii characters
-syntax match nonascii "[^\x00-\x7F]"
-highlight nonascii guibg=Blue ctermbg=2
+highlight nonascii ctermbg=red guibg=red
+match nonascii /[^\d0-\d127]/
+autocmd BufWinEnter * match ExtraWhitespace /[^\d0-\d127]/
+autocmd InsertEnter * match ExtraWhitespace /[^\d0-\d127]/
+autocmd InsertLeave * match ExtraWhitespace /[^\d0-\d127]/
+
+highlight OtherExtraWhitespace ctermbg=red guibg=red
+match OtherExtraWhitespace /\s\+\%#\@<!$/
 
 " add highlight to nc 
 autocmd BufNewFile,BufRead *.nc set filetype=nc
@@ -82,6 +119,11 @@ autocmd BufWritePost *.php silent execute "!php-cs-fixer fix %" | edit! | redraw
 
 " enable to add debug line
 au BufReadPost,BufNewFile *.py iabbrev DEBUG from pprint import pprint; import pdb; pdb.set_trace()
+au BufReadPost,BufNewFile *.[ch] iabbrev DEBUG __BKPT(0);
+
+" enable to add C style comment
+au BufReadPost,BufNewFile *.[ch] iabbrev COMMENT /* */<Left><Left><Left>
+au BufReadPost,BufNewFile *.[ch] iabbrev TODO /* TODO: */<Left><Left><Left>
 
 " add nesc to tagbar
 let g:tagbar_type_nc = {
@@ -101,7 +143,7 @@ let g:tagbar_type_nc = {
 \ }
 
 " enable backspace...
-set backspace=2
+set backspace=indent,eol,start
 
 " custom mappings
 
@@ -113,25 +155,40 @@ map <C-l> :TagbarToggle<CR>
 
 " ctags
 nnoremap <C-g> <C-]>
+map <C-b> :tn<CR>
 set tags=tags;
 "map <C-h> :call CurtineIncSw()<CR>
 
 " Ctrl-P
 " see https://github.com/ctrlpvim/ctrlp.vim
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+" let g:ctrlp_map = '<c-p>'
+" let g:ctrlp_cmd = 'CtrlP'
+" let g:ctrlp_working_path_mode = 'ra'
+" let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 
+" fzf
+map <C-p> :Files <CR>
+
+" --column: Show column number
+" --line-number: Show line number
+" --no-heading: Do not show file headings in results
+" --fixed-strings: Search term as a literal string
+" --ignore-case: Case insensitive search
+" --no-ignore: Do not respect .gitignore, etc...
+" --hidden: Search hidden files and folders
+" --follow: Follow symlinks
+" --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
+" --color: Search color options
+command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
+map <C-h> :Find <C-r><C-w><CR>
+map <C-y> :Find 
+map <C-m> :% s/<C-r><C-w>/<C-r><C-w>/g
 
 " youcompleteme
-let g:ycm_server_python_interpreter="/usr/local/bin/python3"
-let g:ycm_python_binary_path = '/usr/local/bin/python3'
-let g:ycm_rust_src_path = '/Users/Jan/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
-let g:EclimCompletionMethod = 'omnifunc'
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_autoclose_preview_window_after_insertion = 1
 map <C-f> ::YcmCompleter GoTo<CR>
+map <C-s> ::YcmCompleter GetDoc<CR>
 set splitbelow "open preview on bottom of screen"
 let g:ycm_seed_identifiers_with_syntax = 1 "add language specific completions"
 let g:ycm_filetype_blacklist = {
@@ -144,9 +201,36 @@ let g:ycm_filetype_blacklist = {
       \ 'vimwiki': 1,
       \ 'pandoc': 1,
       \ 'infolog': 1,
-      \ 'mail': 1,
-      \ 'python': 1
+      \ 'mail': 1
       \}
+"     \ 'python': 1
+
+" color
+autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+colorscheme slate
+
+" folding
+"set nofoldenable
+set foldmethod=syntax
+set foldnestmax=1
+set foldlevel=99
+
+" NeoDebug
+map <C-x>x ::NeoDebug<CR>
+let g:neodbg_keymap_toggle_breakpoint  = '<C-x>b'      " toggle breakpoint on current line
+let g:neodbg_keymap_next               = '<F3>'        " next
+let g:neodbg_keymap_run_to_cursor      = '<S-F2>'      " run to cursor (tb and c)
+let g:neodbg_keymap_jump               = '<S-F3>'    " set next statement (tb and jump)
+let g:neodbg_keymap_step_into          = '<F4>'        " step into
+let g:neodbg_keymap_step_out           = '<S-F4>'      " setp out
+let g:neodbg_keymap_continue           = '<F2>'         " run or continue
+let g:neodbg_keymap_print_variable     = '<C-x>p'        " view variable under the cursor
+let g:neodbg_keymap_stop_debugging     = '<C-x>e'       " stop debugging (kill)
+let g:neodbg_keymap_toggle_console_win = '<F6>'         " toggle console window
+let g:neodbg_keymap_terminate_debugger = '<C-x>x'        " terminate debugger
+
+" Doxygen
+map <C-k> :Dox<CR>
 
 " java
 "autocmd FileType java setlocal omnifunc=javacomplete#Complete

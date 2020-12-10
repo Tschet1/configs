@@ -42,7 +42,7 @@ ZSH_THEME="afowler"
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
 # The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
+HIST_STAMPS="dd.mm.yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -53,7 +53,6 @@ ZSH_THEME="afowler"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git)
 plugins=(zsh-autosuggestions)
-source ~/.iterm2_shell_integration.zsh
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -95,12 +94,14 @@ unsetopt share_history
 
 alias homepage="cd ~/Documents/Corps-Page; vagrant up"
 alias loadKey="ssh-add ~/.ssh/id_rsa"
+alias open="xdg-open"
 
 PATH="$PATH:/opt/bin:/opt/local/bin:/usr/local/bin:~/personalScripts"
 fpath+=~/.zfunc
 
 export PATH="/usr/local/opt/gnu-getopt/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
+export PATH="/home/jam/.local/bin:$PATH"
 
 # we want english and not crappy translated CLI
 export LANG=en_US.UTF-8
@@ -109,4 +110,55 @@ export LANG=en_US.UTF-8
 export VISUAL=vim
 export EDITOR="$VISUAL"
 
+DISABLE_UNTRACKED_FILES_DIRTY="true"
+#function git_prompt_info() {
+#  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+#  echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
+#}
+export CMSIS_PATH=/opt/CMSIS_5.6.0/CMSIS
+export PATH=/opt/mergehex/:/opt/nrfjprog/:$PATH
+export PATH=/opt/lint/:$PATH
+#export PATH=/opt/gcc-arm-none-eabi-8-2018-q4-major/arm-none-eabi/bin:/opt/gcc-arm-none-eabi-8-2018-q4-major/bin:$PATH
+export ARM_TOOL_VARIANT=mdk_pro_flex
+export ARMLMD_LICENSE_FILE=1714@192.9.200.249
+#export PATH=/opt/gcc-arm-none-eabi-8-2018-q4-major/bin/:$PATH
+export PATH=/opt/gcc-arm-none-eabi-9-2020-q2-update/bin/:$PATH
+export PATH=/opt/arm-none-eabi-gdb-9.2/bin/:$PATH
+export PATH=/opt/ARM_Compiler_5.06u6/bin/:$PATH
 
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib/
+
+# ZEPHYR
+export GNUARMEMB_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi-9-2020-q2-update
+export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
+export ZEPHYR_BASE=~/ncs/zephyr
+
+# nordic shortcuts
+function findelf() {
+  find ~+ -name "$1.elf"
+}
+function buildntest() {
+  cd build_gcc
+  ninja $1 && ctest -R $@ --output-on-failure --interactive-debug-mode
+  cd ..
+}
+function sedallfilesinthisdirectory() {
+  find . -type f -exec sed -i {} $@ \;
+}
+
+export CTEST_PARALLEL_LEVEL=$(nproc)
+export `gnome-keyring-daemon`
+
+alias pbcopy='xclip -selection clipboard'
+alias pbpaste='xclip -selection clipboard -o'
+alias fvim='fzf|xargs -i{} vim {}'
+alias dragoon="cd /home/jam/Documents/dragoon"
+alias sdk="cd /home/jam/Documents/sdk"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# --files: List files that would be searched but do not search
+# --no-ignore: Do not respect .gitignore, etc...
+# --hidden: Search hidden files and folders
+# --follow: Follow symlinks
+# --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
