@@ -55,3 +55,4 @@
 
 (package! vue-mode)
 (package! evil-commentary)
+(package! lsp-python-ms)
