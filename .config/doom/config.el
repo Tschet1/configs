@@ -99,3 +99,7 @@
 
 (setq lsp-python-ms-python-executable-cmd "/usr/local/bin/python3")
 (setq lsp-python-ms-executable "/Users/jan/.python-language-server/output/bin/Release/osx-x64/publish/Microsoft.Python.LanguageServer")
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)))

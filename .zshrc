@@ -110,6 +110,8 @@ export LANG=en_US.UTF-8
 export VISUAL=vim
 export EDITOR="$VISUAL"
 
+# doom
+export DOOMDIR=/Users/jan/.config/doom
 
 # Pretty prompt
 setopt prompt_subst
