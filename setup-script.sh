@@ -22,6 +22,19 @@ function help_impl {
     exit
 }
 
+function emacs_impl
+{
+case "${machine}" in
+        Linux)  sudo apt-get install emacs;;
+        Mac)    brew install emacs;;
+        *)      not_implemented
+    esac
+
+    git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
+    ~/.emacs.d/bin/doom install
+}
+
+
 # check if brew is installed on mac
 function bootstrap_impl {
     case "${machine}" in
@@ -32,15 +45,15 @@ function bootstrap_impl {
 
     mv $0 ~/
     cd ~/
+    rm -r configs
     git clone --recurse-submodule https://github.com/Tschet1/configs.git
     mv configs/.[a-zA-Z]* ~/
-    rm -r configs
 }
 
 function vim_impl {
     case "${machine}" in
-        Linux)  sudo apt-get install neovim python3;;
-        Mac)    brew install nvim python3;;
+        Linux)  sudo apt-get install neovim python3 fzf ripgrep;;
+        Mac)    brew install nvim python3 fzf ripgrep;;
         *)      not_implemented
     esac
 
@@ -87,7 +100,7 @@ function ycm_impl {
     mkdir ycm_build
     cd ycm_build
     if [[ "${machine}" == "Mac" ]]; then
-        cmake -DPYTHON_LIBRARY=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/lib/libpython3.7.dylib -DPYTHON_INCLUDE_DIR=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/include/python3.7m -G "Unix Makefiles" -DUSE_SYSTEM_LIBCLANG=ON -DUSE_PYTHON2=off . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
+        cmake -DPYTHON_LIBRARY=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.9/lib/libpython3.9.dylib -DPYTHON_INCLUDE_DIR=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.9/include/python3.9 -G "Unix Makefiles" -DUSE_SYSTEM_LIBCLANG=ON -DUSE_PYTHON2=off . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
     else
         cmake -G "Unix Makefiles" -DUSE_PYTHON2=off . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
     fi
@@ -97,7 +110,7 @@ function ycm_impl {
     mkdir regex_build
     cd regex_build
     if [[ "${machine}" == "Mac" ]]; then
-        cmake -DPYTHON_LIBRARY=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/lib/libpython3.7.dylib -DPYTHON_INCLUDE_DIR=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/include/python3.7m -G "Unix Makefiles" . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/cregex
+        cmake -DPYTHON_LIBRARY=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.9/lib/libpython3.9.dylib -DPYTHON_INCLUDE_DIR=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.9/include/python3.9 -G "Unix Makefiles" . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/cregex
     else
         cmake -G "Unix Makefiles" . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/cregex
     fi

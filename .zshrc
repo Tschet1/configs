@@ -110,6 +110,8 @@ export LANG=en_US.UTF-8
 export VISUAL=vim
 export EDITOR="$VISUAL"
 
+# doom
+export DOOMDIR=/Users/janmuller/.config/doom
 
 # Pretty prompt
 setopt prompt_subst
@@ -132,8 +134,9 @@ setopt PROMPT_SUBST
 PROMPT='$(ssh_info) %{${fg_bold[blue]}%}:: %{$reset_color%}%{${fg[green]}%}%3~ %{${fg[yellow]}%}${vcs_info_msg_0_}%{${fg_bold[$CARETCOLOR]}%}»%{${reset_color}%} '
 
 export PATH=$PATH:$HOME/.config/composer/vendor/bin
-export PATH="/usr/local/opt/qt/bin:$PATH:/Users/jan/Library/Python/3.7/bin"
+export PATH="/usr/local/opt/qt/bin:$PATH:/Users/janmuller/Library/Python/3.7/bin"
 export PATH="$PATH:/usr/local/opt/CMSIS_5"
 export PATH="$PATH:/usr/local/opt/llvm/bin"
 export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
 export GNUARMEMB_TOOLCHAIN_PATH="/usr/local/Caskroom/gcc-arm-embedded/9-2020-q2-update/gcc-arm-none-eabi-9-2020-q2-update/"
+export PATH="/opt/homebrew/bin:$PATH"
