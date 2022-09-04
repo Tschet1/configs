@@ -34,7 +34,6 @@ case "${machine}" in
     ~/.emacs.d/bin/doom install
 }
 
-
 # check if brew is installed on mac
 function bootstrap_impl {
     case "${machine}" in
