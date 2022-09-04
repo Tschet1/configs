@@ -91,11 +91,7 @@
 (fset 'python_debug
     "from pprint import pprint; import pdb; pdb.set_trace()")
 
-(use-package! lsp-python-ms
-  :ensure t
-  :hook (python-mode . (lambda ()
-                         (require 'lsp-python-ms)
-                         (lsp))))
+; https://github.com/gregsexton/ob-ipython
+(use-package! ob-ipython)
+(use-package! lsp-pyright)
 
-(setq lsp-python-ms-python-executable-cmd "/usr/local/bin/python3")
-(setq lsp-python-ms-executable "/Users/jan/.python-language-server/output/bin/Release/osx-x64/publish/Microsoft.Python.LanguageServer")
