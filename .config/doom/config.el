@@ -95,3 +95,56 @@
 (use-package! ob-ipython)
 (use-package! lsp-pyright)
 
+;; Templates
+(require 'tempo)
+(setq tempo-interactive t)
+(tempo-define-template "cmocka-test"
+                       '("static void test_" (p "Name: " name) "(void **state)" n>
+                         "{" n>
+                         n>
+                         "}")
+                       "Add cmocka testcase")
+
+(defun cmocka-testcase-from-line (line)
+  "create a cmocka testcase invocation line from the line containing the testcase name"
+  (string-match "static\svoid\s\\(test_[^(]*\\)(" line)
+  (concat "cmocka_unit_test(" (match-string 1 line) "),")
+  )
+
+(tempo-define-template "cmocka-main"
+                       '("int main(void)" n>
+                         "{" n>
+                         "const struct CMUnitTest " (p "Name: " name) "_test_suite[] = {" n>
+                         (string-join
+                          (sort
+                           (seq-map #'cmocka-testcase-from-line
+                                    (seq-filter (lambda (elt) (string-match "static\svoid\stest_" elt))
+                                                (split-string (buffer-string) "\n")
+                                                ))
+                           'string-lessp ) "\n"
+                          ) n>
+                         "};" n>
+                         n>
+                         "int fail_count = 0;" n>
+                         "fail_count += cmocka_run_group_tests(" (s name) "_suite, NULL, NULL);" n>
+                         n>
+                         "return fail_count;" n>
+                         "}")
+                       "Add cmocka main"
+                       )
+
+;; JIRA
+(defun current-jira-issue-from-git-branch ()
+  (let ((branch (car (vc-git-branches)))
+        (regexp "[A-Z]\\{3,\\}-[0-9]\\{4,\\}"))
+    (when (string-match regexp branch)
+      (message "ok")
+        (match-string 0 branch)
+      )
+    )
+  )
+
+(defun enter-current-jira-issue ()
+  (interactive)
+  (insert (current-jira-issue-from-git-branch))
+  )
