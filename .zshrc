@@ -103,6 +103,11 @@ export PATH="/usr/local/opt/gnu-getopt/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/home/jam/.local/bin:$PATH"
 
+# tmux
+function tmux-cd {
+    tmux command-prompt -I $PWD -p "New session dir:" "attach -c %1"
+ }
+
 # we want english and not crappy translated CLI
 export LANG=en_US.UTF-8
 
@@ -122,16 +127,20 @@ export PATH=/opt/lint/:$PATH
 export ARM_TOOL_VARIANT=mdk_pro_flex
 export ARMLMD_LICENSE_FILE=1714@192.9.200.249
 #export PATH=/opt/gcc-arm-none-eabi-8-2018-q4-major/bin/:$PATH
-export PATH=/opt/gcc-arm-none-eabi-9-2020-q2-update/bin/:$PATH
-export PATH=/opt/arm-none-eabi-gdb-9.2/bin/:$PATH
-export PATH=/opt/ARM_Compiler_5.06u6/bin/:$PATH
+#export PATH=/opt/gcc-arm-none-eabi-9-2020-q2-update/bin/:$PATH
+#export PATH=/opt/gcc-arm-none-eabi-10-2020-q4-major/bin/:$PATH
+export PATH=/opt/gcc-arm-none-eabi-10.3-2021.10/bin/:$PATH
+
+export PATH=$PATH:/opt/SEGGER/SystemView_V332
+export PATH=$PATH:/usr/share/segger_embedded_studio_for_arm_5.32a/bin/
+export PATH=$PATH:/home/jam/.config/coc/extensions/coc-clangd-data/install/11.0.0/clangd_11.0.0/bin/
 
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib/
 
 # ZEPHYR
-export GNUARMEMB_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi-9-2020-q2-update
+export GNUARMEMB_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi-10.3-2021.10
 export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
-export ZEPHYR_BASE=~/ncs/zephyr
+export ZEPHYR_BASE=/home/jam/Documents/ncs_ws/zephyr
 
 # nordic shortcuts
 function findelf() {
@@ -143,8 +152,83 @@ function buildntest() {
   cd ..
 }
 function sedallfilesinthisdirectory() {
-  find . -type f -exec sed -i {} $@ \;
+  find . -name .git -prune -o -type f -exec sed -i {} $@ \;
 }
+
+function build_reflector() {
+  ninja
+
+  if [ $# -ne 0 ];
+  then
+    segger="-s $1"
+  else
+    segger=""
+  fi
+  find . -type f -name "tp_reflector_*.hex" -exec bash -c "echo 'flash {}'; nrfjprog --eraseall $segger && nrfjprog --program {} $segger && nrfjprog --reset $segger" \;
+}
+
+function build_initiator() {
+  ninja
+  
+  if [ $# -ne 0 ];
+  then
+    segger="-s $1"
+  else
+    segger=""
+  fi
+  find . -type f -name "tp_initiator_*.hex" -exec bash -c "echo 'flash {}'; nrfjprog --eraseall $segger && nrfjprog --program {} $segger && nrfjprog --reset $segger" \;
+}
+
+function build_reflector_53() {
+  ninja
+
+  if [ $# -ne 0 ];
+  then
+    segger="-s $1"
+  else
+    segger=""
+  fi
+  
+  bash -c "nrfjprog -f NRF53 --coprocessor CP_NETWORK --recover $segger && nrfjprog -f NRF53 --coprocessor CP_APPLICATION --recover $segger"
+  
+  find . -type f -name "tp_reflector_*.hex" -exec bash -c "echo 'flash {}'; nrfjprog -f NRF53 --coprocessor CP_NETWORK --chiperase --program {} $segger" \;
+  find . -type f -name "*dummy_app_core.hex" -exec bash -c "echo 'flash {}'; nrfjprog -f NRF53 --coprocessor CP_APPLICATION --chiperase --program {} $segger" \;
+
+  bash -c "nrfjprog --reset $segger"
+}
+
+function build_initiator_53() {
+  ninja
+
+  if [ $# -ne 0 ];
+  then
+    segger="-s $1"
+  else
+    segger=""
+  fi
+  
+  bash -c "nrfjprog -f NRF53 --coprocessor CP_NETWORK --recover $segger && nrfjprog -f NRF53 --coprocessor CP_APPLICATION --recover $segger"
+ 
+  find . -type f -name "tp_initiator_*.hex" -exec bash -c "echo 'flash {}'; nrfjprog -f NRF53 --coprocessor CP_NETWORK --chiperase --program {} $segger" \;
+  find . -type f -name "*dummy_app_core.hex" -exec bash -c "echo 'flash {}'; nrfjprog -f NRF53 --coprocessor CP_APPLICATION --chiperase --program {} $segger" \;
+
+  bash -c "nrfjprog --reset $segger"
+}
+
+function flash_hex_on_dev() {
+  nrfjprog --eraseall -s $2 && nrfjprog --program $1 -s $2 && nrfjprog --reset -s $2
+}
+
+function flash_hexes_on_53()
+{
+  nrfjprog -f NRF53 --coprocessor CP_NETWORK --recover -s $3
+  nrfjprog -f NRF53 --coprocessor CP_APPLICATION --recover -s $3
+  nrfjprog -f NRF53 --coprocessor CP_NETWORK --chiperase --program $1 -s $3
+  nrfjprog -f NRF53 --coprocessor CP_APPLICATION --chiperase --program $2 -s $3
+  nrfjprog --reset -s $3
+}
+
+alias reset_all='nrfjprog -i|xargs -P8 -I{} nrfjprog -r -s {}'
 
 export CTEST_PARALLEL_LEVEL=$(nproc)
 export `gnome-keyring-daemon`
@@ -154,6 +238,7 @@ alias pbpaste='xclip -selection clipboard -o'
 alias fvim='fzf|xargs -i{} vim {}'
 alias dragoon="cd /home/jam/Documents/dragoon"
 alias sdk="cd /home/jam/Documents/sdk"
+alias branchlog="git for-each-ref --sort=-committerdate:iso8601 --format='%(committerdate:iso8601)%09%(refname)' refs/heads"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # --files: List files that would be searched but do not search
@@ -162,3 +247,30 @@ alias sdk="cd /home/jam/Documents/sdk"
 # --follow: Follow symlinks
 # --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
+export NRFXLIB_PATH=/home/jam/Documents/ncs_ws/nrfxlib
+export PATH=${HOME}/gn:"$PATH"
+#export PATH=/opt/clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04/bin:"$PATH"
+export PATH="$PATH":/home/jam/.docker/cli-plugins
+export CMAKE_C_COMPILER_LAUNCHER ccache
+export CTR_PATH=${HOME}/Documents/ncs_ws/test_ble
+
+# armclang
+#export PATH=/opt/ArmCompilerforEmbedded6.18/bin/:"$PATH"
+#export ARM_PRODUCT_PATH=/opt/ArmCompilerforEmbedded6.18/sw/mappings/
+
+export PATH="$PATH":/opt/ARM_Compiler_5.06u6/bin/
+
+function git_n_last_used_branches()
+{
+  git for-each-ref --sort='-committerdate:iso8601' --format=' %(committerdate:iso8601)%09%(refname)' refs/heads|head -n $1
+}
+
+# start ssh agent
+# is this an interactive shell?
+if [[ $- == *i* ]]; then
+    # set up ssh key server
+    if [[ -x /usr/bin/keychain ]]; then
+        eval $(keychain --eval --ignore-missing ~/.ssh/id_rsa ~/.ssh/id_ed25519)
+    fi
+fi
+

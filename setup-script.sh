@@ -30,6 +30,8 @@ function bootstrap_impl {
         *)      not_implemented
     esac
 
+    mv $0 ~/
+    cd ~/
     git clone --recurse-submodule https://github.com/Tschet1/configs.git
     mv configs/.[a-zA-Z]* ~/
     rm -r configs
@@ -37,11 +39,13 @@ function bootstrap_impl {
 
 function vim_impl {
     case "${machine}" in
-        Linux)  sudo apt-get install vim python3;;
-        Mac)    brew install vim python3;;
+        Linux)  sudo apt-get install neovim python3;;
+        Mac)    brew install nvim python3;;
         *)      not_implemented
     esac
 
+    ln -s /usr/opt/local/bin/nvim /usr/opt/local/bin/vim
+    python3 -m pip install --user --upgrade pynvim
     vim +PluginInstall +qall
 }
 
@@ -85,7 +89,7 @@ function ycm_impl {
     if [[ "${machine}" == "Mac" ]]; then
         cmake -DPYTHON_LIBRARY=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/lib/libpython3.7.dylib -DPYTHON_INCLUDE_DIR=/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/include/python3.7m -G "Unix Makefiles" -DUSE_SYSTEM_LIBCLANG=ON -DUSE_PYTHON2=off . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
     else
-        cmake -G "Unix Makef  iles" -DUSE_PYTHON2=off . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
+        cmake -G "Unix Makefiles" -DUSE_PYTHON2=off . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
     fi
     cmake --build . --target ycm_core --config Release
 
