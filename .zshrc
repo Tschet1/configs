@@ -240,6 +240,8 @@ alias dragoon="cd /home/jam/Documents/dragoon"
 alias sdk="cd /home/jam/Documents/sdk"
 alias branchlog="git for-each-ref --sort=-committerdate:iso8601 --format='%(committerdate:iso8601)%09%(refname)' refs/heads"
 
+alias sizeofdh="ninja dh > /dev/null && arm-none-eabi-size stack/projects/dh/build/dh_s140.elf"
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # --files: List files that would be searched but do not search
 # --no-ignore: Do not respect .gitignore, etc...
@@ -262,7 +264,7 @@ export PATH="$PATH":/opt/ARM_Compiler_5.06u6/bin/
 
 function git_n_last_used_branches()
 {
-  git for-each-ref --sort='-committerdate:iso8601' --format=' %(committerdate:iso8601)%09%(refname)' refs/heads|head -n $1
+  git for-each-ref --sort='-committerdate:iso8601' --format=' %(committerdate:iso8601)%09%(refname)' refs/heads|head -n $1|sed -e 's/refs\/heads\///g'
 }
 
 # start ssh agent
@@ -273,4 +275,3 @@ if [[ $- == *i* ]]; then
         eval $(keychain --eval --ignore-missing ~/.ssh/id_rsa ~/.ssh/id_ed25519)
     fi
 fi
-

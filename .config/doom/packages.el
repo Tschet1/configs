@@ -53,3 +53,11 @@
 (package! string-inflection)
 (package! jinja2-mode)
 (package! clang-format)
+(package! cmake-build
+  :recipe (:host github :repo "rpav/cmake-build.el"))
+
+(package! vue-mode)
+(package! lsp-pyright)
+(package! ob-ipython)
+(package! ripgrep)
+(package! graphviz-dot-mode)

@@ -22,6 +22,18 @@ function help_impl {
     exit
 }
 
+function emacs_impl
+{
+case "${machine}" in
+        Linux)  sudo apt-get install emacs;;
+        Mac)    brew install emacs;;
+        *)      not_implemented
+    esac
+
+    git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
+    ~/.emacs.d/bin/doom install
+}
+
 # check if brew is installed on mac
 function bootstrap_impl {
     case "${machine}" in
@@ -32,15 +44,15 @@ function bootstrap_impl {
 
     mv $0 ~/
     cd ~/
+    rm -r configs
     git clone --recurse-submodule https://github.com/Tschet1/configs.git
     mv configs/.[a-zA-Z]* ~/
-    rm -r configs
 }
 
 function vim_impl {
     case "${machine}" in
-        Linux)  sudo apt-get install neovim python3;;
-        Mac)    brew install nvim python3;;
+        Linux)  sudo apt-get install neovim python3 fzf ripgrep;;
+        Mac)    brew install nvim python3 fzf ripgrep;;
         *)      not_implemented
     esac
 
