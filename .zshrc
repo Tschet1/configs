@@ -267,6 +267,9 @@ function git_n_last_used_branches()
   git for-each-ref --sort='-committerdate:iso8601' --format=' %(committerdate:iso8601)%09%(refname)' refs/heads|head -n $1|sed -e 's/refs\/heads\///g'
 }
 
+alias git_checkout_from_last_used_branches='git_n_last_used_branches 30 | fzf | grep -o "\s[^\s]*$" | xargs git checkout'
+
+
 # start ssh agent
 # is this an interactive shell?
 if [[ $- == *i* ]]; then
